@@ -1,0 +1,17 @@
+{
+  "name": "tiledb_capi_logging",
+  "version": "0.0.0",
+  "homepage": "https://github.com/davisp/tiledb-log-test",
+  "description": "Test logging capi calls",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name" : "vcpkg-cmake",
+      "host" : true
+    },
+    {
+      "name" : "vcpkg-cmake-config",
+      "host" : true
+    }
+  ]
+}

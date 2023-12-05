@@ -1,0 +1,4 @@
+TileDB CAPI Logging provides CMake targets:
+
+find_package(tiledb_capi_logging CONFIG REQUIRED)
+target_link_libraries(main PRIVATE tiledb_capi_logging::tiledb_capi_logging)
