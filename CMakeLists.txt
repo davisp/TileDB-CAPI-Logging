@@ -5,6 +5,7 @@ project(
   LANGUAGES CXX
 )
 
+include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
@@ -39,14 +40,28 @@ generate_export_header(tdb_capi_logging
     EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/tiledb_capi_logging_export.h
 )
 
+configure_package_config_file(
+    cmake/tdb_capi_logging-config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/tdb_capi_logging-config.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_DATADIR}/tdb_capi_logging/cmake"
+)
+
 install(TARGETS tdb_capi_logging
-    EXPORT tdb_capi_logging-targets
+    EXPORT tdb_capi_logging_targets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+install(
+    EXPORT tdb_capi_logging_targets
+    FILE tdb_capi_logging_targets.cmake
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/tdb_capi_logging/cmake"
+    NAMESPACE tdb_capi_logging::
+)
+
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/tdb_capi_logging-config.cmake"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/tdb_capi_logging/cmake"
 )
