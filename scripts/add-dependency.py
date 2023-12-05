@@ -4,7 +4,7 @@ import json
 import os
 import sys
 
-DEP_NAME = "tiledb_capi_logging"
+DEP_NAME = "tiledb-capi-logging"
 
 def main():
   if len(sys.argv) != 2:
