@@ -1,6 +1,6 @@
 {
   "name": "tiledb-capi-logging",
-  "version": "0.0.7",
+  "version": "0.0.18",
   "homepage": "https://github.com/davisp/tiledb-log-test",
   "description": "Test logging capi calls",
   "license": "MIT",

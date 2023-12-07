@@ -36,10 +36,9 @@
 
 #include "tiledb/sm/c_api/tiledb.h"
 #include "tiledb/sm/c_api/tiledb_experimental.h"
+#include "tiledb/api/c_api/context/context_api_internal.h"
 
-#include "tiledb_capi_logging_export.h"
-
-TILEDB_CAPI_LOGGING_EXPORT std::string tiledb_capi_logging_test();
+#include "tdb_capi_logging.h"
 
 /**
  * Default trait class declaration has no members; it's only defined a
@@ -130,6 +129,36 @@ fmt_args(std::convertible_to<TileDBToString> auto&& ...args)
   return ss.str();
 }
 
+struct TileDBContextFinder {
+  template<typename T>
+  TileDBContextFinder(T) : ctx_(nullptr) {}
+
+  template<tiledb_ctx_handle_t*>
+  TileDBContextFinder(tiledb_ctx_handle_t* ctx) : ctx_(ctx) {}
+
+  inline tiledb_ctx_t* pointer() {
+    return ctx_;
+  }
+
+  inline bool found() {
+    return ctx_ != nullptr;
+  }
+
+  tiledb_ctx_handle_t* ctx_;
+};
+
+tiledb_ctx_handle_t*
+find_context(std::convertible_to<TileDBContextFinder> auto&& ...args)
+{
+  for (auto v : std::initializer_list<TileDBContextFinder>{ args... }) {
+    if (v.found()) {
+      return v.pointer();
+    }
+  }
+
+  return nullptr;
+}
+
 /**
  * Logging aspect for the exception wrapper from a C API function
  *
@@ -156,9 +185,17 @@ class LoggingAspect<f> {
    */
   static void call(Args...args) {
     if constexpr (CAPIFunctionNameTrait<f>::exists) {
-      std::string tag{"capi: " + tiledb_capi_logging_test()};
+      optional<std::string> token;
       auto str_args = fmt_args(args...);
-      LOG_ERROR(tag + CAPIFunctionNameTrait<f>::name + str_args);
+      auto ctx = find_context(args...);
+      if (ctx != nullptr) {
+        auto cfg = ctx->resources().config();
+        token = cfg.template get<std::string>("rest.request.tracing_token");
+      }
+
+      tiledb::internal::logging::TileDBCAPILoggerTokens tokens(token.value_or(""));
+
+      tiledb_capi_log(tokens, CAPIFunctionNameTrait<f>::name, str_args);
     }
   }
 };

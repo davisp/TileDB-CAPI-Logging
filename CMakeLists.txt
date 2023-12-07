@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
+
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ Standard")
+
 project(
   tdb_capi_logging
   VERSION 0.0.1
@@ -14,6 +17,7 @@ option(BUILD_SHARED_LIBS "Build shared library" ON)
 add_library(
   tdb_capi_logging
     include/capi_function_override.h
+    include/tdb_capi_logging.h
     src/main.cc
 )
 
@@ -23,7 +27,15 @@ add_library(
     tdb_capi_logging
 )
 
+target_include_directories(
+  tdb_capi_logging
+  PRIVATE
+    "include"
+    "${CMAKE_CURRENT_BINARY_DIR}/include"
+)
+
 set(PUBLIC_HEADERS
+  "include/tdb_capi_logging.h"
   "include/capi_function_override.h"
   "${CMAKE_BINARY_DIR}/include/tiledb_capi_logging_export.h"
 )
