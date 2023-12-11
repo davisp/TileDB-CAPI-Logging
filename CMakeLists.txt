@@ -22,6 +22,11 @@ add_library(
       src/main.cc
 )
 
+set_property(TARGET tdb_capi_logging
+  PROPERTY
+    POSITION_INDEPENDENT_CODE ON
+)
+
 add_library(
   tdb_capi_logging::tdb_capi_logging
   ALIAS
