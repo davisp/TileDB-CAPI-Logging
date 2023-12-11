@@ -12,13 +12,14 @@ include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-option(BUILD_SHARED_LIBS "Build shared library" ON)
+option(BUILD_SHARED_LIBS "Build shared library" OFF)
 
 add_library(
   tdb_capi_logging
-    include/capi_function_override.h
-    include/tdb_capi_logging.h
-    src/main.cc
+    STATIC
+      include/capi_function_override.h
+      include/tdb_capi_logging.h
+      src/main.cc
 )
 
 add_library(
