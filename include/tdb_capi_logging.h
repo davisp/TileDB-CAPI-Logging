@@ -34,6 +34,9 @@
 #define TILEDB_CAPI_LOGGING
 
 #include <fstream>
+#include <mutex>
+#include <optional>
+#include <string>
 
 #include "tiledb_capi_logging_export.h"
 
